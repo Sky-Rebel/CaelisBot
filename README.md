@@ -1,7 +1,5 @@
 # CaelisBot
 
----
-
 ## 项目简介
 ![无法加载图片](./assets/caelisbot.png)
 
