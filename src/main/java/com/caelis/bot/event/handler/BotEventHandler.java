@@ -1,6 +1,6 @@
 package com.caelis.bot.event.handler;
 
-import com.caelis.bot.event.BotClientPostEvent;
+import com.caelis.bot.event.BotEvent;
 import com.caelis.bot.event.meta.handler.BotMetaEventHandler;
 import com.caelis.bot.event.msg.handler.BotMessageEventHandler;
 import com.caelis.bot.event.msg_sent.handler.BotSentMsgEventHandler;
@@ -8,11 +8,11 @@ import com.caelis.bot.event.notice.handler.BotNoticeEventHandler;
 import com.caelis.bot.event.request.handler.BotRequestEventHandler;
 import org.json.JSONObject;
 
-public class BotClientPostEventHandler
+public class BotEventHandler
 {
 	public static void handleEvent(JSONObject clientPostJSONData)
 	{
-		BotClientPostEvent botClientPostEvent = new BotClientPostEvent();
+		BotEvent botClientPostEvent = new BotEvent();
 		botClientPostEvent.setTime(clientPostJSONData.getLong("time"));
 		botClientPostEvent.setSelfId(clientPostJSONData.getLong("self_id"));
 		botClientPostEvent.setPostType(clientPostJSONData.getString("post_type"));

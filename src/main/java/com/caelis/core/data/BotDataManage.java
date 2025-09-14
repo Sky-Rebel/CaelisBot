@@ -21,9 +21,13 @@ public class BotDataManage implements AutoCloseable
 
 	protected JSONObject rawSubJsonData;
 
-	protected String userID;
+	protected String userId;
+
+	protected String groupId;
 
 	protected JSONObject userJsonData;
+
+	protected JSONObject groupJsonData;
 
 	protected String subJsonDataType;
 
@@ -165,10 +169,7 @@ public class BotDataManage implements AutoCloseable
 
 	protected static void writeJSONDataToFile(JSONObject jsonData)
 	{
-		try
-		(
-			PrintStream printStream = new PrintStream(file)
-		)
+		try (PrintStream printStream = new PrintStream(file))
 		{
 			printStream.write(jsonData.toString(4).getBytes(StandardCharsets.UTF_8));
 		}
@@ -182,10 +183,13 @@ public class BotDataManage implements AutoCloseable
 	public void close()
 	{
 		if (subJsonDataType.equals("group"))
-			jsonData.put("group", subJsonData);
+		{
+			rawSubJsonData.put(groupId, groupJsonData);
+			jsonData.put("group", rawSubJsonData);
+		}
 		else if (subJsonDataType.equals("user"))
 		{
-			rawSubJsonData.put(userID, userJsonData);
+			rawSubJsonData.put(userId, userJsonData);
 			jsonData.put("user", rawSubJsonData);
 		}
 		else

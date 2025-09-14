@@ -1,7 +1,7 @@
 package com.caelis.bot.net;
 
 import com.caelis.bot.api.BotMessageSendService;
-import com.caelis.bot.event.handler.BotClientPostEventHandler;
+import com.caelis.bot.event.handler.BotEventHandler;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -40,7 +40,7 @@ public class BotWebSocketServer extends WebSocketServer
 	{
 		JSONObject botClientData = new JSONObject(message);
 		System.out.println(message);
-		BotClientPostEventHandler.handleEvent(botClientData);
+		BotEventHandler.handleEvent(botClientData);
 	}
 
 	@Override

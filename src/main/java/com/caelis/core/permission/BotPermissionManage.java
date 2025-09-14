@@ -12,9 +12,14 @@ public class BotPermissionManage
 		}
 	}
 
+	public static BotPermissionType getUserPermissionType(long userID)
+	{
+		return getUserPermissionType(String.valueOf(userID));
+	}
+
 	public static BotPermissionType getUserPermissionType(String userID)
 	{
-		BotUserDataManage botUserDataManage = new BotUserDataManage(userID);
+		BotUserDataManage botUserDataManage = new BotUserDataManage(String.valueOf(userID));
 		String permissionType = botUserDataManage.getString("permission_type", BotPermissionType.MR.toString());
 		switch (permissionType)
 		{
@@ -23,6 +28,21 @@ public class BotPermissionManage
 			case "PG" : return BotPermissionType.PG;
 			default : return BotPermissionType.MR;
 		}
+	}
+
+	public static boolean isZRPermission(long userID)
+	{
+		return isZRPermission(String.valueOf(userID));
+	}
+
+	public static boolean isCGPermission(long userID)
+	{
+		return isCGPermission(String.valueOf(userID));
+	}
+
+	public static boolean isPGPermission(long userID)
+	{
+		return isPGPermission(String.valueOf(userID));
 	}
 
 	public static boolean isZRPermission(String userID)

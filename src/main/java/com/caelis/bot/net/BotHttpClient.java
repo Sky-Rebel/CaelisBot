@@ -29,8 +29,12 @@ public class BotHttpClient
 		HttpRequestInfo httpRequestInfo = new HttpRequestInfo();
 		httpRequestInfo.setUrl(this.url);
 		httpRequestInfo.setRequestBody(requestBody);
+		System.out.println(requestBody);
 		HttpPostRequest httpPostRequest = new HttpPostRequest(httpRequestInfo);
 		HttpResponseInfo httpResponseInfo = httpPostRequest.sendRequest();
-		return new JSONObject(httpResponseInfo.getResponseStr());
+		JSONObject response = new JSONObject(httpResponseInfo.getResponseStr());
+		if (response.isEmpty()) return new JSONObject();
+		System.out.println(response.toString(4));
+		return response;
 	}
 }
