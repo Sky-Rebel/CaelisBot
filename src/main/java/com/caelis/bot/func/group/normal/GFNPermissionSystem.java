@@ -1,6 +1,6 @@
 package com.caelis.bot.func.group.normal;
 
-import com.caelis.bot.api.BotMessageSendService;
+import com.caelis.bot.api.BotMessageManageService;
 import com.caelis.bot.event.msg.group.normal.BotGroupNormalMessageEvent;
 import com.caelis.bot.event.msg.group.normal.IBotGroupNormalMessageEventHandler;
 import com.caelis.core.permission.BotPermissionManage;
@@ -23,10 +23,10 @@ public class GFNPermissionSystem implements IBotGroupNormalMessageEventHandler
 													  .split(" ", 2)[0];
 			if (BotPermissionManage.isCGPermission(userId))
 			{
-				BotMessageSendService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), "对方既已拥有超管及更高权限");
+				BotMessageManageService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), "对方既已拥有超管及更高权限");
 			}
 			BotPermissionManage.addUserAsPermissionOwner(BotPermissionType.CG, userId);
-			BotMessageSendService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), "既已设置对方为超管权限");
+			BotMessageManageService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), "既已设置对方为超管权限");
 		}
 
 		if
@@ -40,10 +40,10 @@ public class GFNPermissionSystem implements IBotGroupNormalMessageEventHandler
 			String userId = botGroupNormalMessageEvent.getRawMessage().split(" ", 2)[0];
 			if (BotPermissionManage.isPGPermission(userId))
 			{
-				BotMessageSendService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), "对方既已拥有普管及更高权限");
+				BotMessageManageService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), "对方既已拥有普管及更高权限");
 			}
 			BotPermissionManage.addUserAsPermissionOwner(BotPermissionType.PG, userId);
-			BotMessageSendService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), "既已设置对方为普管权限");
+			BotMessageManageService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), "既已设置对方为普管权限");
 		}
 	}
 }

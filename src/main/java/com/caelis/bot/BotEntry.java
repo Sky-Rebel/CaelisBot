@@ -1,11 +1,8 @@
 package com.caelis.bot;
 
-import com.caelis.bot.api.BotMessageSendService;
+import com.caelis.bot.api.BotMessageManageService;
 import com.caelis.bot.net.BotNetworkConfig;
 import com.caelis.bot.net.BotWebSocketServer;
-import com.caelis.core.data.BotGroupDataManage;
-import com.caelis.core.msg.TextMessage;
-import com.sun.tools.javac.Main;
 
 import java.net.InetSocketAddress;
 import java.util.Scanner;
@@ -17,8 +14,8 @@ public class BotEntry
 
 	public static void main(String[] args)
 	{
-		BotMessageSendService.sendGroupTextMsg(BOT_CG_GROUP, "Caelis Bot 启动成功, 即将启动服务器");
-		BotMessageSendService.sendCaelisBotImage(BOT_CG_GROUP);
+		BotMessageManageService.sendGroupTextMsg(BOT_CG_GROUP, "Caelis Bot 启动成功, 即将启动服务器");
+		BotMessageManageService.sendCaelisBotImage(BOT_CG_GROUP);
 		try
 		{
 			CountDownLatch serverStartedLatch = new CountDownLatch(1);

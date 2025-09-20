@@ -1,8 +1,12 @@
 package com.caelis.core.msg;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class AtMessage extends Message
+import java.util.ArrayList;
+import java.util.List;
+
+public class ATMessage extends Message
 {
 	private static final String msgType = "at";
 
@@ -16,6 +20,22 @@ public class AtMessage extends Message
 	public void setQQ(String qq)
 	{
 		this.qq = qq;
+	}
+
+	public static List<Long> getAtList(JSONArray jsonArray)
+	{
+		List<Long> atList = new ArrayList<>();
+		jsonArray.forEach(obj ->
+		{
+			JSONObject jsonObject = (JSONObject) obj;
+			if (jsonObject.getString("type").equals("at"))
+			{
+				String at = jsonObject.getString("qq");
+				if (!at.equals("all"))
+					atList.add(Long.valueOf(at));
+			}
+		});
+		return atList;
 	}
 
 	@Override

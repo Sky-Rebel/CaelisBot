@@ -1,12 +1,15 @@
 package com.caelis.bot.event.msg.group.normal.handler;
 
-import com.caelis.bot.api.BotMessageSendService;
 import com.caelis.bot.event.msg.group.BotGroupMessageEvent;
 import com.caelis.bot.event.msg.group.normal.BotGroupNormalMessageEvent;
+import com.caelis.bot.event.msg.group.normal.IBotGroupNormalMessageEventHandler;
 import com.caelis.bot.func.group.normal.GFNAutoReplyTest;
 import com.caelis.bot.func.group.normal.GFNAutoSendLike;
+import com.caelis.bot.func.group.normal.GFNGroupSwitch;
 import com.caelis.bot.func.group.normal.GFNPermissionSystem;
 import org.json.JSONObject;
+
+import java.util.Arrays;
 
 public class BotGroupNormalMessageEventHandler
 {
@@ -39,10 +42,12 @@ public class BotGroupNormalMessageEventHandler
 
 	public static void callEventHandler(BotGroupNormalMessageEvent botGroupNormalMessageEvent)
 	{
-		new GFNAutoSendLike().handleGroupNormalMessageEvent(botGroupNormalMessageEvent);
-		new GFNAutoReplyTest().handleGroupNormalMessageEvent(botGroupNormalMessageEvent);
-		new GFNPermissionSystem().handleGroupNormalMessageEvent(botGroupNormalMessageEvent);
-		if (botGroupNormalMessageEvent.getRawMessage().equals("test"))
-			BotMessageSendService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), "success");
+		Arrays.stream(new IBotGroupNormalMessageEventHandler[]
+		{
+			new GFNAutoSendLike(),
+			new GFNAutoReplyTest(),
+			new GFNPermissionSystem(),
+			new GFNGroupSwitch()
+		}).forEach(handler -> handler.handleGroupNormalMessageEvent(botGroupNormalMessageEvent));
 	}
 }

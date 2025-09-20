@@ -1,6 +1,6 @@
 package com.caelis.bot.func.group.normal;
 
-import com.caelis.bot.api.BotMessageSendService;
+import com.caelis.bot.api.BotMessageManageService;
 import com.caelis.bot.event.msg.group.normal.BotGroupNormalMessageEvent;
 import com.caelis.bot.event.msg.group.normal.IBotGroupNormalMessageEventHandler;
 import com.caelis.core.permission.BotPermissionManage;
@@ -28,7 +28,7 @@ public class GFNGroupSwitch implements IBotGroupNormalMessageEventHandler
 					reply = "开机成功！";
 				}
 			}
-			BotMessageSendService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), reply);
+			BotMessageManageService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), reply);
 		}
 
 		if (botGroupNormalMessageEvent.getRawMessage().equals("关机"))
@@ -47,7 +47,7 @@ public class GFNGroupSwitch implements IBotGroupNormalMessageEventHandler
 				else
 					reply = "既已关机！";
 			}
-			BotMessageSendService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), reply);
+			BotMessageManageService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), reply);
 		}
 	}
 }

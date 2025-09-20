@@ -1,6 +1,6 @@
 package com.caelis.bot.net;
 
-import com.caelis.bot.api.BotMessageSendService;
+import com.caelis.bot.api.BotMessageManageService;
 import com.caelis.bot.event.handler.BotEventHandler;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -25,7 +25,7 @@ public class BotWebSocketServer extends WebSocketServer
 	public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake)
 	{
 		System.out.println("客户端连接开启 -> " + webSocket.getRemoteSocketAddress());
-		BotMessageSendService.sendGroupTextMsg(634447585, "Web Socket Service 连接成功! -> " + webSocket.getRemoteSocketAddress());
+		BotMessageManageService.sendGroupTextMsg(634447585, "Web Socket Service 连接成功! -> " + webSocket.getRemoteSocketAddress());
 		countDownLatch.countDown();
 	}
 
@@ -50,6 +50,6 @@ public class BotWebSocketServer extends WebSocketServer
 	public void onStart()
 	{
 		System.out.println("客户端启动成功！");
-		BotMessageSendService.sendGroupTextMsg(634447585, "Web Socket Service 启动成功！");
+		BotMessageManageService.sendGroupTextMsg(634447585, "Web Socket Service 启动成功！");
 	}
 }

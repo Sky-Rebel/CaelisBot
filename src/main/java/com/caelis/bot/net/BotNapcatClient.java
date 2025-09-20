@@ -8,11 +8,11 @@ import org.json.JSONObject;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class BotHttpClient
+public class BotNapcatClient
 {
 	private URL url;
 
-	public BotHttpClient(String path)
+	public BotNapcatClient(String path)
 	{
 		try
 		{
@@ -32,8 +32,9 @@ public class BotHttpClient
 		System.out.println(requestBody);
 		HttpPostRequest httpPostRequest = new HttpPostRequest(httpRequestInfo);
 		HttpResponseInfo httpResponseInfo = httpPostRequest.sendRequest();
+		String requestStr = httpResponseInfo.getResponseStr();
+		if (requestStr == null || requestStr.isEmpty()) return new JSONObject();
 		JSONObject response = new JSONObject(httpResponseInfo.getResponseStr());
-		if (response.isEmpty()) return new JSONObject();
 		System.out.println(response.toString(4));
 		return response;
 	}
