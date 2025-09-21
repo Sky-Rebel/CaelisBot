@@ -46,7 +46,7 @@ public class BotGroupManageService
 
 	public static void setGroupAdmin(long groupId, long userId, boolean enable)
 	{
-		BotNapcatClient botNapcatClient = new BotNapcatClient("/set_group_whole_ban");
+		BotNapcatClient botNapcatClient = new BotNapcatClient("/set_group_admin");
 		JSONObject rootObject = new JSONObject();
 		rootObject.put("group_id", groupId);
 		rootObject.put("user_id", userId);

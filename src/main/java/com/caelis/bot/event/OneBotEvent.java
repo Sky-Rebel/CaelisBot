@@ -1,6 +1,6 @@
 package com.caelis.bot.event;
 
-public class BotEvent
+public class OneBotEvent
 {
 	private long time;
 

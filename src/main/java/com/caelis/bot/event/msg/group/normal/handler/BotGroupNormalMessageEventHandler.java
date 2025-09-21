@@ -1,11 +1,11 @@
 package com.caelis.bot.event.msg.group.normal.handler;
 
 import com.caelis.bot.event.msg.group.BotGroupMessageEvent;
-import com.caelis.bot.event.msg.group.normal.BotGroupNormalMessageEvent;
-import com.caelis.bot.event.msg.group.normal.IBotGroupNormalMessageEventHandler;
+import com.caelis.bot.event.msg.group.normal.BotNormalGroupMessageEvent;
+import com.caelis.bot.event.msg.group.normal.IBotNormalGroupMessageEventHandler;
 import com.caelis.bot.func.group.normal.GFNAutoReplyTest;
 import com.caelis.bot.func.group.normal.GFNAutoSendLike;
-import com.caelis.bot.func.group.normal.GFNGroupSwitch;
+import com.caelis.bot.func.group.normal.GFNSwitchGroup;
 import com.caelis.bot.func.group.normal.GFNPermissionSystem;
 import org.json.JSONObject;
 
@@ -15,39 +15,39 @@ public class BotGroupNormalMessageEventHandler
 {
 	public static void handlerEvent(BotGroupMessageEvent botGroupMessageEvent, JSONObject clientPostJSONData)
 	{
-		BotGroupNormalMessageEvent botGroupNormalMessageEvent = new BotGroupNormalMessageEvent();
+		BotNormalGroupMessageEvent botNormalGroupMessageEvent = new BotNormalGroupMessageEvent();
 		JSONObject senderJsonObject = clientPostJSONData.getJSONObject("sender");
-		BotGroupNormalMessageEvent.Sender sender = botGroupNormalMessageEvent.new Sender();
+		BotNormalGroupMessageEvent.Sender sender = botNormalGroupMessageEvent.new Sender();
 		sender.setCard(senderJsonObject.getString("card"));
 		sender.setRole(senderJsonObject.getString("role"));
 		sender.setUserId(senderJsonObject.getLong("user_id"));
 		sender.setNickname(senderJsonObject.getString("nickname"));
-		botGroupNormalMessageEvent.setSender(sender);
-		botGroupNormalMessageEvent.setTime(botGroupMessageEvent.getTime());
-		botGroupNormalMessageEvent.setSelfId(botGroupMessageEvent.getSelfId());
-		botGroupNormalMessageEvent.setPostType(botGroupMessageEvent.getPostType());
-		botGroupNormalMessageEvent.setMessageType(botGroupMessageEvent.getMessageType());
-		botGroupNormalMessageEvent.setMessageSubType(botGroupMessageEvent.getMessageSubType());
-		botGroupNormalMessageEvent.setFont(clientPostJSONData.getInt("font"));
-		botGroupNormalMessageEvent.setUserId(clientPostJSONData.getLong("user_id"));
-		botGroupNormalMessageEvent.setGroupId(clientPostJSONData.getLong("group_id"));
-		botGroupNormalMessageEvent.setMessageId(clientPostJSONData.getLong("message_id"));
-		botGroupNormalMessageEvent.setMessage(clientPostJSONData.getJSONArray("message"));
-		botGroupNormalMessageEvent.setGroupName(clientPostJSONData.getString("group_name"));
-		botGroupNormalMessageEvent.setMessageSeq(clientPostJSONData.getLong("message_seq"));
-		botGroupNormalMessageEvent.setRawMessage(clientPostJSONData.getString("raw_message"));
-		botGroupNormalMessageEvent.setMessageFormat(clientPostJSONData.getString("message_format"));
-		callEventHandler(botGroupNormalMessageEvent);
+		botNormalGroupMessageEvent.setSender(sender);
+		botNormalGroupMessageEvent.setTime(botGroupMessageEvent.getTime());
+		botNormalGroupMessageEvent.setSelfId(botGroupMessageEvent.getSelfId());
+		botNormalGroupMessageEvent.setPostType(botGroupMessageEvent.getPostType());
+		botNormalGroupMessageEvent.setMessageType(botGroupMessageEvent.getMessageType());
+		botNormalGroupMessageEvent.setMessageSubType(botGroupMessageEvent.getMessageSubType());
+		botNormalGroupMessageEvent.setFont(clientPostJSONData.getInt("font"));
+		botNormalGroupMessageEvent.setUserId(clientPostJSONData.getLong("user_id"));
+		botNormalGroupMessageEvent.setGroupId(clientPostJSONData.getLong("group_id"));
+		botNormalGroupMessageEvent.setMessageId(clientPostJSONData.getLong("message_id"));
+		botNormalGroupMessageEvent.setMessage(clientPostJSONData.getJSONArray("message"));
+		botNormalGroupMessageEvent.setGroupName(clientPostJSONData.getString("group_name"));
+		botNormalGroupMessageEvent.setMessageSeq(clientPostJSONData.getLong("message_seq"));
+		botNormalGroupMessageEvent.setRawMessage(clientPostJSONData.getString("raw_message"));
+		botNormalGroupMessageEvent.setMessageFormat(clientPostJSONData.getString("message_format"));
+		callEventHandler(botNormalGroupMessageEvent);
 	}
 
-	public static void callEventHandler(BotGroupNormalMessageEvent botGroupNormalMessageEvent)
+	public static void callEventHandler(BotNormalGroupMessageEvent botNormalGroupMessageEvent)
 	{
-		Arrays.stream(new IBotGroupNormalMessageEventHandler[]
+		Arrays.stream(new IBotNormalGroupMessageEventHandler[]
 		{
 			new GFNAutoSendLike(),
 			new GFNAutoReplyTest(),
 			new GFNPermissionSystem(),
-			new GFNGroupSwitch()
-		}).forEach(handler -> handler.handleGroupNormalMessageEvent(botGroupNormalMessageEvent));
+			new GFNSwitchGroup()
+		}).forEach(handler -> handler.handleGroupNormalMessageEvent(botNormalGroupMessageEvent));
 	}
 }

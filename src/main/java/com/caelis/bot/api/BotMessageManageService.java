@@ -1,5 +1,6 @@
 package com.caelis.bot.api;
 
+import com.caelis.bot.BotEntry;
 import com.caelis.bot.net.BotNapcatClient;
 import com.caelis.core.msg.Message;
 import com.caelis.core.msg.TextMessage;
@@ -66,6 +67,11 @@ public class BotMessageManageService
 		JSONArray messages = Message.getMessageListJSONArray((List<? extends Message>) messageList);
 		rootObject.put("message", messages);
 		botNapcatClient.send(rootObject.toString());
+	}
+
+	public static void sendGroupTextMsgToMainGroup(String text)
+	{
+		sendGroupTextMsg(BotEntry.BOT_CG_GROUP, text);
 	}
 
 	public static void sendCaelisBotImage(long groupID)

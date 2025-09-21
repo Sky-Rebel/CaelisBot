@@ -1,47 +1,362 @@
 package com.caelis.bot.func.group.normal;
 
+import com.caelis.bot.BotEntry;
+import com.caelis.bot.api.BotGroupManageService;
+import com.caelis.bot.api.BotGroupMemberDataService;
 import com.caelis.bot.api.BotMessageManageService;
 import com.caelis.bot.api.BotProfileService;
-import com.caelis.bot.event.msg.group.normal.BotGroupNormalMessageEvent;
-import com.caelis.bot.event.msg.group.normal.IBotGroupNormalMessageEventHandler;
+import com.caelis.bot.event.msg.group.normal.BotNormalGroupMessageEvent;
+import com.caelis.bot.event.msg.group.normal.IBotNormalGroupMessageEventHandler;
 import com.caelis.core.permission.BotPermissionManage;
 
 import java.util.List;
 
 import static com.caelis.core.msg.ATMessage.getAtList;
 
-public class GFNAutoReplyTest implements IBotGroupNormalMessageEventHandler
+public class GFNAutoReplyTest implements IBotNormalGroupMessageEventHandler
 {
 	@Override
-	public void handleGroupNormalMessageEvent(BotGroupNormalMessageEvent botGroupNormalMessageEvent)
+	public void handleGroupNormalMessageEvent(BotNormalGroupMessageEvent botNormalGroupMessageEvent)
 	{
-		final String command = botGroupNormalMessageEvent.getRawMessage();
-		final String[] commands = botGroupNormalMessageEvent.getRawMessage().split(" ");
-		final long userId = botGroupNormalMessageEvent.getUserId();
-		final long groupId = botGroupNormalMessageEvent.getGroupId();
-		final String groupName = botGroupNormalMessageEvent.getGroupName();
-		final long messageId = botGroupNormalMessageEvent.getMessageId();
-		final long senderId = botGroupNormalMessageEvent.getSender().getUserId();
-		final String senderNickName = botGroupNormalMessageEvent.getSender().getNickname();
-		final String senderRole = botGroupNormalMessageEvent.getSender().getRole();
-		final String senderCard = botGroupNormalMessageEvent.getSender().getCard();
+		final String command = botNormalGroupMessageEvent.getRawMessage();
+		final String[] commands = botNormalGroupMessageEvent.getRawMessage().split(" ");
+		final long userId = botNormalGroupMessageEvent.getUserId();
+		final long groupId = botNormalGroupMessageEvent.getGroupId();
+		final String groupName = botNormalGroupMessageEvent.getGroupName();
+		final long messageId = botNormalGroupMessageEvent.getMessageId();
+		final long senderId = botNormalGroupMessageEvent.getSender().getUserId();
+		final String senderNickName = botNormalGroupMessageEvent.getSender().getNickname();
+		final String senderRole = botNormalGroupMessageEvent.getSender().getRole();
+		final String senderCard = botNormalGroupMessageEvent.getSender().getCard();
 		final boolean isOwner = senderRole.equals("owner");
 		final boolean isAdmin = senderRole.equals("admin");
-		final List<Long> atList = getAtList(botGroupNormalMessageEvent.getMessage());
+		final List<Long> atList = getAtList(botNormalGroupMessageEvent.getMessage());
+		final long selfId = botNormalGroupMessageEvent.getSelfId();
+		final boolean isGroupOwnerTheSelf = BotGroupMemberDataService.isGroupOwner(groupId, selfId);
+		final boolean isGroupAdminTheSelf = BotGroupMemberDataService.hasGroupAdminPermission(groupId, selfId);
 
-		if (botGroupNormalMessageEvent.getRawMessage().equals("test"))
+		if (botNormalGroupMessageEvent.getRawMessage().equals("test"))
 		{
-			BotMessageManageService.sendGroupTextMsg(botGroupNormalMessageEvent.getGroupId(), "GF: Auto Reply Test - Success! " + "[" + (System.currentTimeMillis() - botGroupNormalMessageEvent.getTime()) + "]");
+			BotMessageManageService.sendGroupTextMsg(botNormalGroupMessageEvent.getGroupId(), "GF: Auto Reply Test - Success! " + "[" + (System.currentTimeMillis() - botNormalGroupMessageEvent.getTime()) + "]");
+		}
+
+		if (command.equals("菜单"))
+		{
+			String reply = """
+                           基本群管
+                           机器设置
+                           免费使用
+                           """;
 		}
 
 		if (command.equals("机器设置"))
 		{
-			StringBuilder reply = new StringBuilder();
-			reply.append("设置机器头像").append("\n");
-			reply.append("设置机器昵称").append("\n");
-			reply.append("设置机器个签").append("\n");
-			reply.append("设置机器性别").append("\n");
-			BotMessageManageService.sendGroupTextMsg(groupId, reply.toString());
+			String reply = """
+                           设置机器头像
+                           设置机器昵称
+                           设置机器个签
+                           设置机器性别
+                           设置机器机型
+                           """;
+			BotMessageManageService.sendGroupTextMsg(groupId, reply);
+		}
+
+		if (command.equals("基本群管"))
+		{
+			String reply = """
+                           全禁 全解
+                           禁言 【账号】 【时间】
+                           解禁 【账号】
+                           改名 【账号】 【名字】
+                           清名 【账号】
+                           上管 【账号】
+                           下管 【账号】
+                           上衔 【账号】
+                           下衔 【账号】
+                           踢出 【账号】
+                           踢黑 【账号】
+                           """;
+			BotMessageManageService.sendGroupTextMsg(groupId, reply);
+		}
+
+		if (command.equals("免费使用"))
+		{
+			String reply = """
+                           本QQ机器人为公益作品，免费开放使用
+                           您可以通过如下方式免费使用QQ机器人
+                           1:添加主人：2056840996
+                           2:加入主群：%d""".formatted(BotEntry.BOT_CG_GROUP);
+			BotMessageManageService.sendGroupTextMsg(groupId, reply);
+		}
+
+		if (command.startsWith("禁言") && (BotPermissionManage.isPGPermission(userId) || isAdmin))
+		{
+			if (Long.parseLong(commands[1]) == selfId)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "自身难施己令，此举固不可为");
+				return;
+			}
+			if (!isGroupAdminTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "未有司管之职，弗为经管之举");
+				return;
+			}
+			if (BotGroupMemberDataService.hasGroupAdminPermission(groupId, Long.parseLong(commands[1])) && !isGroupOwnerTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "同列有司之位，难行辖制之权");
+				return;
+			}
+			if (!BotGroupMemberDataService.isGroupMember(groupId, Long.parseLong(commands[1])))
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "非其域内之人，未可行其事也");
+				return;
+			}
+			if (Long.parseLong(commands[2]) < 1)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "时短不合规制，此事不可施行");
+				return;
+			}
+			if (Long.parseLong(commands[2]) > (60 * 24 *30))
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "时长过逾限度，此举不可为之");
+				return;
+			}
+			BotGroupManageService.setGroupBan(groupId, Long.parseLong(commands[1]), Long.parseLong(commands[2]) * 60);
+			BotMessageManageService.sendGroupTextMsg(groupId, "尝试禁止发言 -> %s -> %s 分钟".formatted(commands[1], commands[2]));
+		}
+
+		if (command.startsWith("解禁") && (BotPermissionManage.isPGPermission(userId) || isAdmin))
+		{
+			if (Long.parseLong(commands[1]) == selfId)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "自身难施己令，此举固不可为");
+				return;
+			}
+			if (!isGroupAdminTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "未有司管之职，弗为经管之举");
+				return;
+			}
+			if (BotGroupMemberDataService.hasGroupAdminPermission(groupId, Long.parseLong(commands[1])) && !isGroupOwnerTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "同列有司之位，难行辖制之权");
+				return;
+			}
+			if (!BotGroupMemberDataService.isGroupMember(groupId, Long.parseLong(commands[1])))
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "非其域内之人，未可行其事也");
+				return;
+			}
+			BotGroupManageService.setGroupBan(groupId, Long.parseLong(commands[1]), 0);
+			BotMessageManageService.sendGroupTextMsg(groupId, "尝试解除禁言 -> %s".formatted(commands[1]));
+		}
+
+		if (command.startsWith("踢出") && BotPermissionManage.isPGPermission(userId))
+		{
+			if (Long.parseLong(commands[1]) == selfId)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "自身难施己令，此举固不可为");
+				return;
+			}
+			if (!isGroupAdminTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "未有司管之职，弗为经管之举");
+				return;
+			}
+			if (BotGroupMemberDataService.hasGroupAdminPermission(groupId, Long.parseLong(commands[1])) && !isGroupOwnerTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "同列有司之位，难行辖制之权");
+				return;
+			}
+			if (!BotGroupMemberDataService.isGroupMember(groupId, Long.parseLong(commands[1])))
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "非其域内之人，未可行其事也");
+				return;
+			}
+			BotGroupManageService.setGroupKick(groupId, Long.parseLong(commands[1]), false);
+			BotMessageManageService.sendGroupTextMsg(groupId, "尝试移出群组 -> %s".formatted(commands[1]));
+		}
+
+		if (command.startsWith("踢黑") && BotPermissionManage.isPGPermission(userId))
+		{
+			if (Long.parseLong(commands[1]) == selfId)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "自身难施己令，此举固不可为");
+				return;
+			}
+			if (!isGroupAdminTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "未有司管之职，弗为经管之举");
+				return;
+			}
+			if (BotGroupMemberDataService.hasGroupAdminPermission(groupId, Long.parseLong(commands[1])) && !isGroupOwnerTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "同列有司之位，难行辖制之权");
+				return;
+			}
+			if (!BotGroupMemberDataService.isGroupMember(groupId, Long.parseLong(commands[1])))
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "非其域内之人，未可行其事也");
+				return;
+			}
+			BotGroupManageService.setGroupKick(groupId, Long.parseLong(commands[1]), true);
+			BotMessageManageService.sendGroupTextMsg(groupId, "尝试移出群组并加入黑名单 -> %s".formatted(commands[1]));
+		}
+
+		if (command.startsWith("改名") && BotPermissionManage.isPGPermission(userId))
+		{
+			if (Long.parseLong(commands[1]) == selfId)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "自身难施己令，此举固不可为");
+				return;
+			}
+			if (!isGroupAdminTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "未有司管之职，弗为经管之举");
+				return;
+			}
+			if (BotGroupMemberDataService.hasGroupAdminPermission(groupId, Long.parseLong(commands[1])) && !isGroupOwnerTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "同列有司之位，难行辖制之权");
+				return;
+			}
+			if (!BotGroupMemberDataService.isGroupMember(groupId, Long.parseLong(commands[1])))
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "非其域内之人，未可行其事也");
+				return;
+			}
+			BotGroupManageService.setGroupCard(groupId, Long.parseLong(commands[1]), commands[2]);
+			BotMessageManageService.sendGroupTextMsg(groupId, "尝试修改名片 -> %s -> %s".formatted(commands[1], commands[2]));
+		}
+
+		if (command.startsWith("清名") && BotPermissionManage.isPGPermission(userId))
+		{
+			if (Long.parseLong(commands[1]) == selfId)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "自身难施己令，此举固不可为");
+				return;
+			}
+			if (!isGroupAdminTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "未有司管之职，弗为经管之举");
+				return;
+			}
+			if (BotGroupMemberDataService.hasGroupAdminPermission(groupId, Long.parseLong(commands[1])) && !isGroupOwnerTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "同列有司之位，难行辖制之权");
+				return;
+			}
+			if (!BotGroupMemberDataService.isGroupMember(groupId, Long.parseLong(commands[1])))
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "非其域内之人，未可行其事也");
+				return;
+			}
+			BotGroupManageService.setGroupCard(groupId, Long.parseLong(commands[1]), "");
+			BotMessageManageService.sendGroupTextMsg(groupId, "尝试恢复名片为QQ昵称 -> %s -> %s".formatted(commands[1], commands[2]));
+		}
+
+		if (command.equals("全禁") && BotPermissionManage.isPGPermission(userId))
+		{
+			if (isGroupAdminTheSelf)
+			{
+				BotGroupManageService.setGroupWholeBan(groupId, true);
+				BotMessageManageService.sendGroupTextMsg(groupId, "尝试开启全体禁言 -> %s".formatted(groupId));
+			}
+			else BotMessageManageService.sendGroupTextMsg(groupId, "未有司管之职，弗为经管之举");
+		}
+
+		if (command.equals("全解") && BotPermissionManage.isPGPermission(userId))
+		{
+			if (isGroupAdminTheSelf)
+			{
+				BotGroupManageService.setGroupWholeBan(groupId, false);
+				BotMessageManageService.sendGroupTextMsg(groupId, "尝试关闭全体禁言 -> %s".formatted(groupId));
+			}
+			else BotMessageManageService.sendGroupTextMsg(groupId, "未有司管之职，弗为经管之举");
+		}
+
+		if (command.startsWith("上管") && BotPermissionManage.isPGPermission(userId))
+		{
+			if (Long.parseLong(commands[1]) == selfId)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "自身难施己令，此举固不可为");
+				return;
+			}
+			if (!isGroupOwnerTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "未有司管之职，弗为经管之举");
+				return;
+			}
+			if (!BotGroupMemberDataService.isGroupMember(groupId, Long.parseLong(commands[1])))
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "非其域内之人，未可行其事也");
+				return;
+			}
+			BotGroupManageService.setGroupAdmin(groupId, Long.parseLong(commands[1]), true);
+			BotMessageManageService.sendGroupTextMsg(groupId, "尝试设置管理员 -> %s".formatted(commands[1]));
+		}
+
+		if (command.startsWith("下管") && BotPermissionManage.isPGPermission(userId))
+		{
+			if (Long.parseLong(commands[1]) == selfId)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "自身难施己令，此举固不可为");
+				return;
+			}
+			if (!isGroupOwnerTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "未有司管之职，弗为经管之举");
+				return;
+			}
+			if (!BotGroupMemberDataService.isGroupMember(groupId, Long.parseLong(commands[1])))
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "非其域内之人，未可行其事也");
+				return;
+			}
+			BotGroupManageService.setGroupAdmin(groupId, Long.parseLong(commands[1]), false);
+			BotMessageManageService.sendGroupTextMsg(groupId, "尝试取消管理员 -> %s".formatted(commands[1]));
+		}
+
+		if (command.startsWith("上衔") && BotPermissionManage.isPGPermission(userId))
+		{
+			if (Long.parseLong(commands[1]) == selfId)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "自身难施己令，此举固不可为");
+				return;
+			}
+			if (!isGroupOwnerTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "未有司管之职，弗为经管之举");
+				return;
+			}
+			if (!BotGroupMemberDataService.isGroupMember(groupId, Long.parseLong(commands[1])))
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "非其域内之人，未可行其事也");
+				return;
+			}
+			BotGroupManageService.setGroupSpecialTitle(groupId, Long.parseLong(commands[1]), commands[2]);
+			BotMessageManageService.sendGroupTextMsg(groupId, "尝试设置专属头衔 -> %s -> %s".formatted(commands[1], commands[2]));
+		}
+
+		if (command.startsWith("下衔") && BotPermissionManage.isPGPermission(userId))
+		{
+			if (Long.parseLong(commands[1]) == selfId)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "自身难施己令，此举固不可为");
+				return;
+			}
+			if (!isGroupOwnerTheSelf)
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "未有司管之职，弗为经管之举");
+				return;
+			}
+			if (!BotGroupMemberDataService.isGroupMember(groupId, Long.parseLong(commands[1])))
+			{
+				BotMessageManageService.sendGroupTextMsg(groupId, "非其域内之人，未可行其事也");
+				return;
+			}
+			BotGroupManageService.setGroupSpecialTitle(groupId, Long.parseLong(commands[1]), "");
+			BotMessageManageService.sendGroupTextMsg(groupId, "尝试取消专属头衔 -> %s".formatted(commands[1]));
 		}
 		
 		if (command.equals("我的账号")) BotMessageManageService.sendGroupTextMsg(groupId, "你的账号 -> " + userId);

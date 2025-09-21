@@ -3,7 +3,7 @@ package com.caelis.bot.event.msg.group.normal;
 import com.caelis.bot.event.msg.group.BotGroupMessageEvent;
 import org.json.JSONArray;
 
-public class BotGroupNormalMessageEvent extends BotGroupMessageEvent
+public class BotNormalGroupMessageEvent extends BotGroupMessageEvent
 {
 	private String rawMessage;
 

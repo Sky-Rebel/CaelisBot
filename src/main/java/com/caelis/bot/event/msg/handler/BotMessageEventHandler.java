@@ -1,6 +1,6 @@
 package com.caelis.bot.event.msg.handler;
 
-import com.caelis.bot.event.BotEvent;
+import com.caelis.bot.event.OneBotEvent;
 import com.caelis.bot.event.msg.BotMessageEvent;
 import com.caelis.bot.event.msg.group.handler.BotGroupMessageEventHandler;
 import com.caelis.bot.event.msg.priv.handler.BotPrivateMsgEventHandler;
@@ -8,12 +8,12 @@ import org.json.JSONObject;
 
 public class BotMessageEventHandler
 {
-	public static void handleEvent(BotEvent botClientPostEvent, JSONObject clientPostJSONData)
+	public static void handleEvent(OneBotEvent oneBotEvent, JSONObject clientPostJSONData)
 	{
 		BotMessageEvent botMessageEvent = new BotMessageEvent();
-		botMessageEvent.setTime(botClientPostEvent.getTime());
-		botMessageEvent.setSelfId(botClientPostEvent.getSelfId());
-		botMessageEvent.setPostType(botClientPostEvent.getPostType());
+		botMessageEvent.setTime(oneBotEvent.getTime());
+		botMessageEvent.setSelfId(oneBotEvent.getSelfId());
+		botMessageEvent.setPostType(oneBotEvent.getPostType());
 		botMessageEvent.setMessageType(clientPostJSONData.getString("message_type"));
 		if (botMessageEvent.getMessageType().equals("group"))
 			BotGroupMessageEventHandler.handleEvent(botMessageEvent, clientPostJSONData);

@@ -1,8 +1,8 @@
 package com.caelis.bot.event.msg;
 
-import com.caelis.bot.event.BotEvent;
+import com.caelis.bot.event.OneBotEvent;
 
-public class BotMessageEvent extends BotEvent
+public class BotMessageEvent extends OneBotEvent
 {
 	private String messageType;
 
