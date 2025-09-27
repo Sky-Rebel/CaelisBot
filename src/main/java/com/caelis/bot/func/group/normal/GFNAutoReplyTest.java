@@ -48,6 +48,7 @@ public class GFNAutoReplyTest implements IBotNormalGroupMessageEventHandler
                            		✨功能菜单✨
                            --------------------
                            ✅基本群管
+                           ✅开关系统
                            ❎娱乐功能
                            ❎签到系统
                            ❎留言系统
@@ -68,6 +69,34 @@ public class GFNAutoReplyTest implements IBotNormalGroupMessageEventHandler
                            --------------------
                            Tip: ✅既已实现 ❎计划实现"""
 			.formatted(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss SSS").format(new Date()));
+			BotMessageManageService.sendGroupTextMsg(groupId, reply);
+		}
+
+		if (command.equals("黑白系统"))
+		{
+			String reply = """
+                           		✨黑白系统✨
+                           --------------------
+                           添加全局黑名
+                           移除全局黑名
+                           全局黑名检测
+                           全局黑名列表
+                           -----
+                           添加全局白名
+                           移除全局白名
+                           全局白名检测
+                           全局白名列表
+                           --------------------
+                           %s""".formatted(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss SSS").format(new Date()));
+			BotMessageManageService.sendGroupTextMsg(groupId, reply);
+		}
+
+		if (command.equals("开关系统"))
+		{
+			String reply = """
+                           开机
+                           关机
+                           """;
 			BotMessageManageService.sendGroupTextMsg(groupId, reply);
 		}
 
@@ -135,31 +164,31 @@ public class GFNAutoReplyTest implements IBotNormalGroupMessageEventHandler
 			int times = Integer.parseInt(commands[1]);
 			String text = """
                           ⚠⚠⚠
-                          ⌈			⌉
+                          ⌈         ⌉
                               普
-                          ⌊			⌋
-                          ⌈			⌉
+                          ⌊         ⌋
+                          ⌈         ⌉
                               通
-                          ⌊			⌋
-                          ⌈			⌉
+                          ⌊         ⌋
+                          ⌈         ⌉
                               清
-                          ⌊			⌋
-                          ⌈			⌉
+                          ⌊         ⌋
+                          ⌈         ⌉
                               屏
-                          ⌊			⌋
+                          ⌊         ⌋
                           ⚠⚠⚠
-                          ⌈			⌉
+                          ⌈         ⌉
                               禁
-                          ⌊			⌋
-                          ⌈			⌉
+                          ⌊         ⌋
+                          ⌈         ⌉
                               止
-                          ⌊			⌋
-                          ⌈			⌉
+                          ⌊         ⌋
+                          ⌈         ⌉
                               发
-                          ⌊			⌋
-                          ⌈			⌉
+                          ⌊         ⌋
+                          ⌈         ⌉
                               言
-                          ⌊			⌋
+                          ⌊         ⌋
                           ⚠⚠⚠""";
 			BotMessageManageService.sendGroupTextMsg(groupId, "普通清屏开始 -> %s 次".formatted(commands[1]));
 			for (int i = 0; i < times; i++)

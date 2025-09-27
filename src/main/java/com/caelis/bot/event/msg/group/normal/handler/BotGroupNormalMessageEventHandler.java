@@ -7,6 +7,7 @@ import com.caelis.bot.func.group.normal.GFNAutoReplyTest;
 import com.caelis.bot.func.group.normal.GFNAutoSendLike;
 import com.caelis.bot.func.group.normal.GFNSwitchGroup;
 import com.caelis.bot.func.group.normal.GFNPermissionSystem;
+import com.caelis.core.switchX.impl.GroupSwitchManage;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -42,12 +43,16 @@ public class BotGroupNormalMessageEventHandler
 
 	public static void callEventHandler(BotNormalGroupMessageEvent botNormalGroupMessageEvent)
 	{
-		Arrays.stream(new IBotNormalGroupMessageEventHandler[]
+		GroupSwitchManage groupSwitchManage = new GroupSwitchManage();
+		new GFNSwitchGroup().handleGroupNormalMessageEvent(botNormalGroupMessageEvent);
+		if (groupSwitchManage.getSwitch(botNormalGroupMessageEvent.getGroupId()))
 		{
-			new GFNAutoSendLike(),
-			new GFNAutoReplyTest(),
-			new GFNPermissionSystem(),
-			new GFNSwitchGroup()
-		}).forEach(handler -> handler.handleGroupNormalMessageEvent(botNormalGroupMessageEvent));
+			Arrays.stream(new IBotNormalGroupMessageEventHandler[]
+			{
+				  new GFNAutoSendLike(),
+				  new GFNAutoReplyTest(),
+				  new GFNPermissionSystem()
+			}).forEach(handler -> handler.handleGroupNormalMessageEvent(botNormalGroupMessageEvent));
+		}
 	}
 }
