@@ -19,15 +19,18 @@ public class BotPermissionManage
 
 	public static BotPermissionType getUserPermissionType(String userID)
 	{
-		BotUserDataManage botUserDataManage = new BotUserDataManage(String.valueOf(userID));
-		String permissionType = botUserDataManage.getString("permission_type", BotPermissionType.MR.toString());
-		switch (permissionType)
+		String permissionType;
+		try (BotUserDataManage botUserDataManage = new BotUserDataManage(String.valueOf(userID)))
 		{
-			case "ZR" : return BotPermissionType.ZR;
-			case "CQ" : return BotPermissionType.CG;
-			case "PG" : return BotPermissionType.PG;
-			default : return BotPermissionType.MR;
+			permissionType = botUserDataManage.getString("permission_type", BotPermissionType.MR.toString());
 		}
+		return switch (permissionType)
+		{
+			case "ZR" -> BotPermissionType.ZR;
+			case "CQ" -> BotPermissionType.CG;
+			case "PG" -> BotPermissionType.PG;
+			default -> BotPermissionType.MR;
+		};
 	}
 
 	public static boolean isZRPermission(long userID)
@@ -45,7 +48,7 @@ public class BotPermissionManage
 		return isPGPermission(String.valueOf(userID));
 	}
 
-	public static boolean isZRPermission(String userID)
+	public static boolean isZRPermission(String userID)    
 	{
 		BotPermissionType botPermissionType = getUserPermissionType(userID);
 		if (botPermissionType.equals(BotPermissionType.ZR)) return true;
@@ -55,6 +58,7 @@ public class BotPermissionManage
 	public static boolean isCGPermission(String userID)
 	{
 		BotPermissionType botPermissionType = getUserPermissionType(userID);
+		System.out.println(botPermissionType);
 		if (botPermissionType.equals(BotPermissionType.CG) || isZRPermission(userID)) return true;
 		return false;
 	}

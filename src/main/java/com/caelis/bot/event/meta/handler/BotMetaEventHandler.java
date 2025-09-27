@@ -16,7 +16,7 @@ public class BotMetaEventHandler
 		botMetaEvent.setMetaEventType(botClientJSONData.getString("meta_event_type"));
 		if (botMetaEvent.getMetaEventType().equals("heartbeat"))
 		{
-			BotHeartBeatMetaEventHandler.handleEvent(botMetaEvent, botClientJSONData);
+			// BotHeartBeatMetaEventHandler.handleEvent(botMetaEvent, botClientJSONData);
 		}
 	}
 }

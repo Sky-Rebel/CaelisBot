@@ -10,11 +10,11 @@ import org.json.JSONObject;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CountDownLatch;
 
-public class BotWebSocketServer extends WebSocketServer
+public class BotWsNapcatServer extends WebSocketServer
 {
 	private final CountDownLatch countDownLatch;
 
-	public BotWebSocketServer(InetSocketAddress inetSocketAddress, CountDownLatch countDownLatch)
+	public BotWsNapcatServer(InetSocketAddress inetSocketAddress, CountDownLatch countDownLatch)
 	{
 		super(inetSocketAddress);
 		this.countDownLatch = countDownLatch;

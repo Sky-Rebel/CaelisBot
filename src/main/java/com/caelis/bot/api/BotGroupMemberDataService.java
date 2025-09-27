@@ -117,6 +117,11 @@ public class BotGroupMemberDataService
 		return getGroupOwner(groupId) == userId;
 	}
 
+	public static boolean isGroupAdmin(long groupId, long userId)
+	{
+		return getGroupAdminList(groupId).contains(userId);
+	}
+
 	public static boolean hasGroupAdminPermission(long groupId, long userId)
 	{
 		if (isGroupOwner(groupId, userId)) return true;

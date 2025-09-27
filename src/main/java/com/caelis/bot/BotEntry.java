@@ -1,8 +1,9 @@
 package com.caelis.bot;
 
 import com.caelis.bot.api.BotMessageManageService;
+import com.caelis.bot.net.BotHttpNapcatServer;
 import com.caelis.bot.net.BotNetworkConfig;
-import com.caelis.bot.net.BotWebSocketServer;
+import com.caelis.bot.net.BotWsNapcatServer;
 
 import java.net.InetSocketAddress;
 import java.util.Scanner;
@@ -18,11 +19,12 @@ public class BotEntry
 		BotMessageManageService.sendCaelisBotImage(BOT_CG_GROUP);
 		try
 		{
-			CountDownLatch serverStartedLatch = new CountDownLatch(1);
-			InetSocketAddress inetSocketAddress = new InetSocketAddress(BotNetworkConfig.WEB_SOCKET_SERVER_PORT);
-			BotWebSocketServer botWebSocketServer = new BotWebSocketServer(inetSocketAddress, serverStartedLatch);
-			botWebSocketServer.start();
-			serverStartedLatch.await();
+			// CountDownLatch serverStartedLatch = new CountDownLatch(1);
+			// InetSocketAddress inetSocketAddress = new InetSocketAddress(BotNetworkConfig.WEB_SOCKET_SERVER_PORT);
+			// BotWsNapcatServer botWSNapcatServer = new BotWsNapcatServer(inetSocketAddress, serverStartedLatch);
+			// botWSNapcatServer.start();
+			// serverStartedLatch.await();
+			BotHttpNapcatServer.start();
 			Scanner scanner = new Scanner(System.in);
 			while (scanner.nextLine().equals("exit")) System.exit(200);
 		}

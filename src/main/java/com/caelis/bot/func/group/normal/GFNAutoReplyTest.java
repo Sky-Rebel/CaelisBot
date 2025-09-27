@@ -9,6 +9,8 @@ import com.caelis.bot.event.msg.group.normal.BotNormalGroupMessageEvent;
 import com.caelis.bot.event.msg.group.normal.IBotNormalGroupMessageEventHandler;
 import com.caelis.core.permission.BotPermissionManage;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static com.caelis.core.msg.ATMessage.getAtList;
@@ -43,10 +45,38 @@ public class GFNAutoReplyTest implements IBotNormalGroupMessageEventHandler
 		if (command.equals("菜单"))
 		{
 			String reply = """
-                           基本群管
-                           机器设置
-                           免费使用
+                           		✨功能菜单✨
+                           --------------------
+                           ✅基本群管
+                           ❎娱乐功能
+                           ❎签到系统
+                           ❎留言系统
+                           ❎银行系统
+                           ❎定时系统
+                           ❎问答系统
+                           ❎刷屏检测
+                           ❎发言统计
+                           ❎禁词系统
+                           ✅权限系统
+                           ✅机器设置
+                           ✅清屏系统
+                           ✅免费使用
+                           --------------------
+                           ☎️: 2056840996
+                           --------------------
+                           ⏰: %s
+                           --------------------
+                           Tip: ✅既已实现 ❎计划实现"""
+			.formatted(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss SSS").format(new Date()));
+			BotMessageManageService.sendGroupTextMsg(groupId, reply);
+		}
+
+		if (command.equals("清屏系统"))
+		{
+			String reply = """
+                           普通清屏
                            """;
+			BotMessageManageService.sendGroupTextMsg(groupId, reply);
 		}
 
 		if (command.equals("机器设置"))
@@ -64,6 +94,8 @@ public class GFNAutoReplyTest implements IBotNormalGroupMessageEventHandler
 		if (command.equals("基本群管"))
 		{
 			String reply = """
+                           -----基本群管-----
+                           
                            全禁 全解
                            禁言 【账号】 【时间】
                            解禁 【账号】
@@ -75,7 +107,16 @@ public class GFNAutoReplyTest implements IBotNormalGroupMessageEventHandler
                            下衔 【账号】
                            踢出 【账号】
                            踢黑 【账号】
-                           """;
+                           
+                           %s
+                           %s
+                           %s
+                           Tip: 参数请以空格分割"""
+			.formatted(
+				"-".repeat(20),
+				new SimpleDateFormat("yyyy-MM-dd hh:mm:ss SSS").format(new Date()),
+				"-".repeat(20)
+			);
 			BotMessageManageService.sendGroupTextMsg(groupId, reply);
 		}
 
@@ -87,6 +128,42 @@ public class GFNAutoReplyTest implements IBotNormalGroupMessageEventHandler
                            1:添加主人：2056840996
                            2:加入主群：%d""".formatted(BotEntry.BOT_CG_GROUP);
 			BotMessageManageService.sendGroupTextMsg(groupId, reply);
+		}
+
+		if (command.startsWith("普通清屏"))
+		{
+			int times = Integer.parseInt(commands[1]);
+			String text = """
+                          ⚠⚠⚠
+                          ⌈			⌉
+                              普
+                          ⌊			⌋
+                          ⌈			⌉
+                              通
+                          ⌊			⌋
+                          ⌈			⌉
+                              清
+                          ⌊			⌋
+                          ⌈			⌉
+                              屏
+                          ⌊			⌋
+                          ⚠⚠⚠
+                          ⌈			⌉
+                              禁
+                          ⌊			⌋
+                          ⌈			⌉
+                              止
+                          ⌊			⌋
+                          ⌈			⌉
+                              发
+                          ⌊			⌋
+                          ⌈			⌉
+                              言
+                          ⌊			⌋
+                          ⚠⚠⚠""";
+			BotMessageManageService.sendGroupTextMsg(groupId, "普通清屏开始 -> %s 次".formatted(commands[1]));
+			for (int i = 0; i < times; i++)
+				BotMessageManageService.sendGroupTextMsg(groupId, text);
 		}
 
 		if (command.startsWith("禁言") && (BotPermissionManage.isPGPermission(userId) || isAdmin))

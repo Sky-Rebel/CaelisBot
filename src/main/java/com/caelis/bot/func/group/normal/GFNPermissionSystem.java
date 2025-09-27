@@ -14,13 +14,13 @@ public class GFNPermissionSystem implements IBotNormalGroupMessageEventHandler
 		if
 		(
 			(
-				botNormalGroupMessageEvent.getRawMessage().equals("设置超级管理") ||
-				botNormalGroupMessageEvent.getRawMessage().equals("设置超管")
+				botNormalGroupMessageEvent.getRawMessage().startsWith("设置超级管理") ||
+				botNormalGroupMessageEvent.getRawMessage().startsWith("设置超管")
 			) &&
 			BotPermissionManage.isZRPermission(String.valueOf(botNormalGroupMessageEvent.getUserId())))
 		{
 			String userId = botNormalGroupMessageEvent.getRawMessage()
-													  .split(" ", 2)[0];
+													  .split(" ", 2)[1];
 			if (BotPermissionManage.isCGPermission(userId))
 			{
 				BotMessageManageService.sendGroupTextMsg(botNormalGroupMessageEvent.getGroupId(), "对方既已拥有超管及更高权限");
@@ -32,12 +32,12 @@ public class GFNPermissionSystem implements IBotNormalGroupMessageEventHandler
 		if
 		(
 			(
-				botNormalGroupMessageEvent.getRawMessage().equals("设置普通管理") ||
-				botNormalGroupMessageEvent.getRawMessage().equals("设置普管")
+				botNormalGroupMessageEvent.getRawMessage().startsWith("设置普通管理") ||
+				botNormalGroupMessageEvent.getRawMessage().startsWith("设置普管")
 			) &&
 			BotPermissionManage.isZRPermission(String.valueOf(botNormalGroupMessageEvent.getUserId())))
 		{
-			String userId = botNormalGroupMessageEvent.getRawMessage().split(" ", 2)[0];
+			String userId = botNormalGroupMessageEvent.getRawMessage().split(" ", 2)[1];
 			if (BotPermissionManage.isPGPermission(userId))
 			{
 				BotMessageManageService.sendGroupTextMsg(botNormalGroupMessageEvent.getGroupId(), "对方既已拥有普管及更高权限");
